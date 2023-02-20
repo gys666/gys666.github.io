@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-first-blog" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/first-blog/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T08:36:24.065Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="C-编程，第-4-部分：字符串和结构体"><a href="#C-编程，第-4-部分：字符串和结构体" class="headerlink" title="C 编程，第 4 部分：字符串和结构体"></a>C 编程，第 4 部分：字符串和结构体</h1><blockquote>
+<p>原文：<a target="_blank" rel="noopener" href="https://github.com/angrave/SystemProgramming/wiki/Processes%2C-Part-1%3A-Introduction">Processes, Part 1: Introduction</a></p>
+</blockquote>
+<blockquote>
+<p>校验：<a target="_blank" rel="noopener" href="https://github.com/hqiwen">_stund</a></p>
+</blockquote>
+<blockquote>
+<p>自豪地采用<a target="_blank" rel="noopener" href="https://translate.google.cn/">谷歌翻译</a></p>
+</blockquote>
+<h2 id="字符串，结构和陷阱"><a href="#字符串，结构和陷阱" class="headerlink" title="字符串，结构和陷阱"></a>字符串，结构和陷阱</h2><h2 id="那什么是字符串？"><a href="#那什么是字符串？" class="headerlink" title="那什么是字符串？"></a>那什么是字符串？</h2><p><img src="/img/b6620ef95e96fee4fcdff893eabdf95c.jpg" alt="Crash String"></p>
+<p>在 C 中，由于历史原因，我们有 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Null-terminated_string">Null Terminated</a> 字符串而不是 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/String_(computer_science)#Length-prefixed">Length Prefixed</a> 。对于平均日常编程而言，这意味着您需要记住空字符！ C 中的字符串被定义为一串字节，直到您达到’\ 0’或空字节。</p>
+<h3 id="两个不同地方的字符串"><a href="#两个不同地方的字符串" class="headerlink" title="两个不同地方的字符串"></a>两个不同地方的字符串</h3><p>每当你定义一个常量字符串（即<code>char* str = &quot;constant&quot;</code>形式的那个）时，该字符串存储在数据或代码 段中，<strong>只读</strong>意味着任何修改字符串的尝试都会导致段错误。</p>
+<p>如果一个字符串在<code>malloc</code>的空间，可以将该字符串更改为他们想要的任何内容。</p>
+<h3 id="内穿管理不善"><a href="#内穿管理不善" class="headerlink" title="内穿管理不善"></a>内穿管理不善</h3><p>一个常见的问题是当你写下面的内容时</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span>* hello_string = <span class="built_in">malloc</span>(<span class="number">14</span>);</span><br><span class="line">                       ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line"><span class="comment">// hello_string ----&gt; | g | a | r | b | a | g | e | g | a | r | b | a | g | e |</span></span><br><span class="line">                       ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br><span class="line">hello_string = <span class="string">&quot;Hello Bhuvan!&quot;</span>;</span><br><span class="line"><span class="comment">// (constant string in the text segment)</span></span><br><span class="line"><span class="comment">// hello_string ----&gt; [ &quot;H&quot; , &quot;e&quot; , &quot;l&quot; , &quot;l&quot; , &quot;o&quot; , &quot; &quot; , &quot;B&quot; , &quot;h&quot; , &quot;u&quot; , &quot;v&quot; , &quot;a&quot; , &quot;n&quot; , &quot;!&quot; , &quot;\0&quot; ]</span></span><br><span class="line">                       ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line"><span class="comment">// memory_leak -----&gt; | g | a | r | b | a | g | e | g | a | r | b | a | g | e |</span></span><br><span class="line">                       ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br><span class="line">hello_string[<span class="number">9</span>] = <span class="string">&#x27;t&#x27;</span>; <span class="comment">//segfault!!分段错误</span></span><br></pre></td></tr></table></figure>
+
+<p>我们做了什么？我们为 14 个字节分配了空间，重新分配指针并成功实现了分段错误!记得要记录你的指针在做什么。您可能想要做的是使用<code>string.h</code>功能<code>strcpy</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">strcpy</span>(hello_string, <span class="string">&quot;Hello Bhuvan!&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="记住-NULL-字节！"><a href="#记住-NULL-字节！" class="headerlink" title="记住 NULL 字节！"></a>记住 NULL 字节！</h3><p>忘记 NULL 终止字符串对字符串有很大的影响！界限检查很重要，它是之前在 wikibook 中提到的重要bug的一部分。</p>
+<h3 id="我在哪里可以找到所有这些功能的深入和分配-综合解释？"><a href="#我在哪里可以找到所有这些功能的深入和分配-综合解释？" class="headerlink" title="我在哪里可以找到所有这些功能的深入和分配 - 综合解释？"></a>我在哪里可以找到所有这些功能的深入和分配 - 综合解释？</h3><p><a target="_blank" rel="noopener" href="https://linux.die.net/man/3/string">就在这里！</a></p>
+<h3 id="字符串信息-x2F-比较：strlen-strcmp"><a href="#字符串信息-x2F-比较：strlen-strcmp" class="headerlink" title="字符串信息&#x2F;比较：strlen strcmp"></a>字符串信息&#x2F;比较：<code>strlen</code> <code>strcmp</code></h3><p><code>int strlen(const char *s)</code>返回不包括空字节的字符串的长度</p>
+<p><code>int strcmp(const char *s1, const char *s2)</code>返回一个确定字符串的字典顺序的整数。如果 s1 在字典中的 s2 之前到达，则返回-1。如果两个字符串相等，则为 0.否则为 1。</p>
+<p>对于大多数这些函数，他们希望字符串是可读的而不是 NULL，但是当你将它们传递给 NULL 时会有未定义的行为。</p>
+<h3 id="字符串更改：strcpy-strcat-strdup"><a href="#字符串更改：strcpy-strcat-strdup" class="headerlink" title="字符串更改：strcpy strcat strdup"></a>字符串更改：<code>strcpy</code> <code>strcat</code> <code>strdup</code></h3><p><code>char *strcpy(char *dest, const char *src)</code>将<code>src</code>处的字符串复制到<code>dest</code>。 <strong>假设 dest 有足够的空间用于 src</strong></p>
+<p><code>char *strcat(char *dest, const char *src)</code>将<code>src</code>的字符串连接到目的地的末尾。 <strong>此函数假定目的地末尾有足够的<code>src</code>空间，包括 NULL 字节</strong></p>
+<p><code>char *strdup(const char *dest)</code>返回字符串的<code>malloc</code>编辑副本。</p>
+<h3 id="字符串搜索：strchr-strstr"><a href="#字符串搜索：strchr-strstr" class="headerlink" title="字符串搜索：strchr strstr"></a>字符串搜索：<code>strchr</code> <code>strstr</code></h3><p><code>char *strchr(const char *haystack, int needle)</code>返回指向<code>haystack</code>中第一次出现<code>needle</code>的指针。如果没有找到，则返回<code>NULL</code>。</p>
+<p><code>char *strstr(const char *haystack, const char *needle)</code>与上面相同，但这次是一个字符串！</p>
+<h3 id="字符串切分：strtok"><a href="#字符串切分：strtok" class="headerlink" title="字符串切分：strtok"></a>字符串切分：<code>strtok</code></h3><p>一个危险但有用的函数 strtok 需要一个字符串并将其切分。这意味着它会将字符串转换为单独的字符串。这个函数有很多规格，所以请阅读手册，下面是一个人为的例子。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">char</span>* upped = strdup(<span class="string">&quot;strtok,is,tricky,!!&quot;</span>);</span><br><span class="line">    <span class="type">char</span>* start = strtok(upped, <span class="string">&quot;,&quot;</span>);</span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, start);</span><br><span class="line">    &#125;<span class="keyword">while</span>((start = strtok(<span class="literal">NULL</span>, <span class="string">&quot;,&quot;</span>)));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">strtok</span><br><span class="line">is</span><br><span class="line">tricky</span><br><span class="line">!!</span><br></pre></td></tr></table></figure>
+
+<p>当我像这样更改<code>upped</code>时会发生什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span>* upped = strdup(<span class="string">&quot;strtok,is,tricky,,,!!&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="内存移动：memcpy和memmove"><a href="#内存移动：memcpy和memmove" class="headerlink" title="内存移动：memcpy和memmove"></a>内存移动：<code>memcpy</code>和<code>memmove</code></h3><p>为什么<code>memcpy</code>和<code>memmove</code>都在<code>&lt;string.h&gt;</code>中？因为字符串本质上是原始内存，在它们的末尾有一个空字节！</p>
+<p><code>void *memcpy(void *dest, const void *src, size_t n)</code>将从<code>str</code>开始的<code>n</code>字节移动到<code>dest</code>。 <strong>注意</strong>当内存区域重叠时，存在未定义的行为。这是我的机器示例中的经典作品之一，因为很多时候 valgrind 将无法拾取它，因为它看起来像是在你的机器上运行。当自动编程器命中时，失败。考虑更安全的版本。</p>
+<p><code>void *memmove(void *dest, const void *src, size_t n)</code>执行与上面相同的操作，但如果内存区域重叠，则可以保证所有字节都将被正确复制。</p>
+<h2 id="那么什么是struct结构体？"><a href="#那么什么是struct结构体？" class="headerlink" title="那么什么是struct结构体？"></a>那么什么是<code>struct</code>结构体？</h2><p><img src="/img/921a3e0534d1220fea61c43535dadd2c.jpg" alt="Struct Example"></p>
+<p>在低层次上，结构体只是一块连续的内存，仅此而已。就像数组一样，struct 有足够的空间来保留其所有成员。但与数组不同，它可以存储不同的类型。考虑上面声明的 contact 结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contact</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> firstname[<span class="number">20</span>];</span><br><span class="line">    <span class="type">char</span> lastname[<span class="number">20</span>];</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> phone;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contact</span> <span class="title">bhuvan</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>简短的写法</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* a lot of times we will do the following typdef</span></span><br><span class="line"><span class="comment"> so we can just write contact contact1 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">contact</span> <span class="title">contact</span>;</span></span><br><span class="line">contact bhuvan;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* You can also declare the struct like this to get</span></span><br><span class="line"><span class="comment"> it done in one statement */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">optional_name</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">&#125; contact;</span><br></pre></td></tr></table></figure>
+
+<p>如果在没有任何优化和重新排序的情况下编译代码，您可以期望每个变量的地址看起来像这样。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&amp;bhuvan           <span class="comment">// 0x100</span></span><br><span class="line">&amp;bhuvan.firstname <span class="comment">// 0x100 = 0x100+0x00</span></span><br><span class="line">&amp;bhuvan.lastname  <span class="comment">// 0x114 = 0x100+0x14</span></span><br><span class="line">&amp;bhuvan.phone     <span class="comment">// 0x128 = 0x100+0x28</span></span><br></pre></td></tr></table></figure>
+
+<p>因为你所有的编译器都说’嘿保留这么多空间，我将去计算你想写的任何变量的偏移’。</p>
+<h3 id="这些偏移是什么意思？"><a href="#这些偏移是什么意思？" class="headerlink" title="这些偏移是什么意思？"></a>这些偏移是什么意思？</h3><p>偏移量是变量开始的位置。联系变量从<code>0x128</code>个字节开始，并继续为 sizeof（int）字节，但并非总是如此。 <strong>偏移不会确定</strong>变量的结束位置。考虑一下你在很多内核代码中看到的以下 hack。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> length;</span><br><span class="line">    <span class="type">char</span> c_str[<span class="number">0</span>];</span><br><span class="line">&#125; <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* to_convert = <span class="string">&quot;bhuvan&quot;</span>;</span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(to_convert);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Let&#x27;s convert to a c string</span></span><br><span class="line"><span class="built_in">string</span>* bhuvan_name;</span><br><span class="line">bhuvan_name = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="built_in">string</span>) + length+<span class="number">1</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Currently, our memory looks like this with junk in those black spaces</span></span><br><span class="line"><span class="comment"> ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span></span><br><span class="line"><span class="comment"> bhuvan_name = |   |   |   |   |   |   |   |   |   |   |   |</span></span><br><span class="line"><span class="comment"> ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">bhuvan_name-&gt;length = length;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">This writes the following values to the first four bytes</span></span><br><span class="line"><span class="comment">The rest is still garbage</span></span><br><span class="line"><span class="comment"> ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span></span><br><span class="line"><span class="comment"> bhuvan_name = | 0 | 0 | 0 | 6 |   |   |   |   |   |   |   |</span></span><br><span class="line"><span class="comment"> ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">strcpy</span>(bhuvan_name-&gt;c_str, to_convert);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Now our string is filled in correctly at the end of the struct</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ____</span></span><br><span class="line"><span class="comment"> bhuvan_name = | 0 | 0 | 0 | 6 | b | h | u | v | a | n | \0 |</span></span><br><span class="line"><span class="comment"> ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾‾</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">strcmp</span>(bhuvan_name-&gt;c_str, <span class="string">&quot;bhuvan&quot;</span>) == <span class="number">0</span> <span class="comment">//The strings are equal!</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="但并非所有结构都是完美的"><a href="#但并非所有结构都是完美的" class="headerlink" title="但并非所有结构都是完美的"></a>但并非所有结构都是完美的</h3><p>结构体可能需要一些称为<a target="_blank" rel="noopener" href="http://www.catb.org/esr/structure-packing/">填充</a>（教程）的东西。 **我们不希望你在这个课程中打包结构，只知道它在那里这是因为在早期（甚至现在）当你需要从内存中的地址时你必须在 32 位或 64 位块中进行。这也意味着您只能请求多次来获得相应的地址。意思是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">picture</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> height;</span><br><span class="line">    pixel** data;</span><br><span class="line">    <span class="type">int</span> width;</span><br><span class="line">    <span class="type">char</span>* enconding;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// You think picture looks like this</span></span><br><span class="line">           height      data         width     encoding</span><br><span class="line">           ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line">picture = |       |               |       |               |</span><br><span class="line">           ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br></pre></td></tr></table></figure>
+
+<p>在概念上可能看起来像这样</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">picture</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> height;</span><br><span class="line">    <span class="type">char</span> slop1[<span class="number">4</span>];</span><br><span class="line">    pixel** data;</span><br><span class="line">    <span class="type">int</span> width;</span><br><span class="line">    <span class="type">char</span> slop2[<span class="number">4</span>];</span><br><span class="line">    <span class="type">char</span>* enconding;</span><br><span class="line">&#125;</span><br><span class="line">           height   slop1       data        width   slop2  encoding</span><br><span class="line">           ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line">picture = |       |       |               |       |       |               |</span><br><span class="line">           ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br></pre></td></tr></table></figure>
+
+<p>（这是在 64 位系统上）并非总是如此，因为有时您的处理器支持未对齐的访问。这是什么意思？那么您可以设置两个属性选项</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span>((<span class="title">packed</span>, <span class="title">aligned</span>(4))) <span class="title">picture</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> height;</span><br><span class="line">    pixel** data;</span><br><span class="line">    <span class="type">int</span> width;</span><br><span class="line">    <span class="type">char</span>* enconding;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Will look like this</span></span><br><span class="line">           height       data        width     encoding</span><br><span class="line">           ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line">picture = |       |               |       |               |</span><br><span class="line">           ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br></pre></td></tr></table></figure>
+
+<p>但现在每次我想访问<code>data</code>或<code>encoding</code>时，我都要进行两次内存访问。您可以做的另一件事是重新排序结构，尽管这并不总是可行的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">picture</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> height;</span><br><span class="line">    <span class="type">int</span> width;</span><br><span class="line">    pixel** data;</span><br><span class="line">    <span class="type">char</span>* enconding;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// You think picture looks like this</span></span><br><span class="line">           height   width        data         encoding</span><br><span class="line">           ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___</span><br><span class="line">picture = |       |       |               |               |</span><br><span class="line">           ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾ ‾‾‾</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/first-blog/" data-id="cleckf94t00006ajxc2e40z96" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/20/hello-world/" class="article-date">
+  <time class="dt-published" datetime="2023-02-20T08:32:29.568Z" itemprop="datePublished">2023-02-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/02/20/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/02/20/hello-world/" data-id="cleckf94y00016ajxe80hbgc2" data-title="Hello World" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">February 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/20/first-blog/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/20/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
